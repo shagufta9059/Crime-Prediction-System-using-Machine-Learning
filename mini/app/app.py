@@ -13,17 +13,17 @@ from pandas import DataFrame
 
 import pypyodbc as odbc
 
-DRIVER_NAME = 'SQL SERVER'
-SERVER_NAME = 'DESKTOP-T4TPA2L\SQLEXPRESS'
-DATABASE_NAME = 'GP'
-connection = f"""
-    DRIVER={{{DRIVER_NAME}}};
-    SERVER={{{SERVER_NAME}}};
-    DATABASE={{{DATABASE_NAME}}};
-    Trust_Connection=yes;
-"""
+# DRIVER_NAME = 'SQL SERVER'
+# SERVER_NAME = 'DESKTOP-T4TPA2L\SQLEXPRESS'
+# DATABASE_NAME = 'GP'
+# connection = f"""
+#     DRIVER={{{DRIVER_NAME}}};
+#     SERVER={{{SERVER_NAME}}};
+#     DATABASE={{{DATABASE_NAME}}};
+#     Trust_Connection=yes;
+# """
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='HTML/CSS')
 
 @app.route('/bar-chart',methods=['GET'])
 def barchart():
@@ -47,41 +47,41 @@ def visualize():
     return render_template("India Map - Districts.html");
 
 
-@app.route('/visualize-combination', methods=['GET', 'POST'])
-def hello_world():
-    record = ""
-    request_type_str = request.method
-    if request_type_str == 'GET':
-        return render_template('map.html', data=record)
-    else:
-        arr = request.form.get('arr').split(',')
-        print(arr)
-        print(len(arr))
-        conn = odbc.connect(connection)
-        cursor = conn.cursor()
-        if (len(arr) == 2):
-            print('in')
-            print(arr[1])
-            sql_select_query = "select District_name from alldisc4 where " + arr[0] + "= ?"
-            cursor.execute(sql_select_query, (arr[1],))
-            records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
-        elif (len(arr) == 4):
-            print('in')
-            print(arr[1])
-            sql_select_query = "select District_name from alldisc4 where " + arr[0] + "= ? and " + arr[2] + "= ?"
-            cursor.execute(sql_select_query, (arr[1], arr[3],))
-            records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
-            print(records)
-        elif (len(arr) == 6):
-            print('in')
-            print(arr[1])
-            sql_select_query = "select District_name from alldisc4 where " + arr[0] + "= ? and " + arr[2] + "= ? and " + \
-                               arr[4] + "= ?"
-            cursor.execute(sql_select_query, (arr[1], arr[3], arr[5],))
-            records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
-            print(records)
+# @app.route('/visualize-combination', methods=['GET', 'POST'])
+# def hello_world():
+#     record = ""
+#     request_type_str = request.method
+#     if request_type_str == 'GET':
+#         return render_template('map.html', data=record)
+#     else:
+#         arr = request.form.get('arr').split(',')
+#         print(arr)
+#         print(len(arr))
+#         conn = odbc.connect(connection)
+#         cursor = conn.cursor()
+#         if (len(arr) == 2):
+#             print('in')
+#             print(arr[1])
+#             sql_select_query = "select District_name from alldisc4 where " + arr[0] + "= ?"
+#             cursor.execute(sql_select_query, (arr[1],))
+#             records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
+#         elif (len(arr) == 4):
+#             print('in')
+#             print(arr[1])
+#             sql_select_query = "select District_name from alldisc4 where " + arr[0] + "= ? and " + arr[2] + "= ?"
+#             cursor.execute(sql_select_query, (arr[1], arr[3],))
+#             records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
+#             print(records)
+#         elif (len(arr) == 6):
+#             print('in')
+#             print(arr[1])
+#             sql_select_query = "select District_name from alldisc4 where " + arr[0] + "= ? and " + arr[2] + "= ? and " + \
+#                                arr[4] + "= ?"
+#             cursor.execute(sql_select_query, (arr[1], arr[3], arr[5],))
+#             records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
+#             print(records)
 
-        return render_template('map.html', data=records)
+#         return render_template('map.html', data=records)
 
 
 @app.route('/home')
@@ -97,46 +97,47 @@ def about():
 #login
 @app.route('/', methods = ["GET", "POST"])
 def login():
-    request_type_str = request.method
-    if request_type_str == 'GET':
-        return render_template('login.html')
-    else:
-        arr = str(request.form.get('user_data')).split(',')
-        conn = odbc.connect(connection)
-        cursor = conn.cursor()
-        sql_select_query = "select * from Users where username= ? AND password= ?"
-        cursor.execute(sql_select_query, (arr[0],arr[1]))
+    # request_type_str = request.method
+    # if request_type_str == 'GET':
+    #     return render_template('login.html')
+    # else:
+    #     arr = str(request.form.get('user_data')).split(',')
+    #     conn = odbc.connect(connection)
+    #     cursor = conn.cursor()
+    #     sql_select_query = "select * from Users where username= ? AND password= ?"
+    #     cursor.execute(sql_select_query, (arr[0],arr[1]))
 
-        records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
-        if records == "":
-            return redirect('/')
+    #     records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'','').replace('[', '').replace(']', '')
+    #     if records == "":
+    #         return redirect('/')
 
-        return redirect('/home')
+    #     return redirect('/home')
+    return redirect('/home')
     
 #register
-@app.route('/register')
-def register():
-    request_type_str = request.method
-    if request_type_str == 'GET':
-        return render_template('register.html')
-    else:
-        arr = str(request.form.get('user_data')).split(',')
-        conn = odbc.connect(connection)
-        cursor = conn.cursor()
-        sql_select_query = "select * from Users where username= ? AND password= ?"
-        cursor.execute(sql_select_query, (arr[0], arr[1]))
+# @app.route('/register')
+# def register():
+    # request_type_str = request.method
+    # if request_type_str == 'GET':
+    #     return render_template('register.html')
+    # else:
+    #     arr = str(request.form.get('user_data')).split(',')
+    #     conn = odbc.connect(connection)
+    #     cursor = conn.cursor()
+    #     sql_select_query = "select * from Users where username= ? AND password= ?"
+    #     cursor.execute(sql_select_query, (arr[0], arr[1]))
 
-        records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'', '').replace(
-            '[', '').replace(']', '')
-        if records != "":
-            return redirect('/register')
+    #     records = str(cursor.fetchall()).replace('(', '').replace('),', '').replace(',)', '').replace('\'', '').replace(
+    #         '[', '').replace(']', '')
+    #     if records != "":
+    #         return redirect('/register')
 
-        else:
-            sql_insert_query = "insert into Users(username,password) values(?,?)"
-            cursor.execute(sql_insert_query, (arr[0], arr[1]))
-            conn.commit()
+    #     else:
+    #         sql_insert_query = "insert into Users(username,password) values(?,?)"
+    #         cursor.execute(sql_insert_query, (arr[0], arr[1]))
+    #         conn.commit()
 
-        return redirect('/')
+    #     return redirect('/')
 
 #text search
 @app.route('/preview')
@@ -177,3 +178,5 @@ def predict2():
         return render_template("predict.html", data = val)
         return str(y_pred)
 
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
